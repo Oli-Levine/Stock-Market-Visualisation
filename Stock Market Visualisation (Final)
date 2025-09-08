@@ -1,0 +1,121 @@
+# ----------------------------------------------------------------------------
+#            Stock Market Insights Dashboard
+# ----------------------------------------------------------------------------
+#
+# Author: Oliver Levine
+# Date: September 9, 2025
+#
+# Description:
+# This script collects, analyzes, and visualizes stock market data for
+# specified companies. It calculates key technical indicators and
+# generates insightful plots. This project is designed to be run in a
+# Google Colab environment.
+#
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# Step 1: Install and Import Necessary Libraries
+# ----------------------------------------------------------------------------
+try:
+    import yfinance as yf
+except ImportError:
+    print("yfinance not found. Installing...")
+    # Use !pip install for Colab environments
+    !pip install yfinance -q
+    import yfinance as yf
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib.gridspec import GridSpec
+
+# Set a professional style for the plots
+plt.style.use('seaborn-v0_8-darkgrid')
+
+print("Libraries installed and imported successfully.")
+
+# ----------------------------------------------------------------------------
+# Step 2: Define Stocks and Data Collection Period
+# ----------------------------------------------------------------------------
+tickers = ['AAPL', 'RYAAY', 'UBER']
+start_date = (pd.to_datetime('today') - pd.DateOffset(years=2)).normalize()
+end_date = pd.to_datetime('today').normalize()
+
+stock_data = {}
+for ticker in tickers:
+    try:
+        # Added progress=False to keep the output clean
+        data = yf.download(ticker, start=start_date, end=end_date, progress=False)
+        if data.empty:
+            print(f"No data found for {ticker}. It might be a delisted or incorrect ticker.")
+        else:
+            stock_data[ticker] = data
+            print(f"Successfully downloaded data for {ticker}")
+    except Exception as e:
+        print(f"Could not download data for {ticker}. Error: {e}")
+
+# ----------------------------------------------------------------------------
+# Step 3: Calculate Key Indicators
+# ----------------------------------------------------------------------------
+for ticker, data in stock_data.items():
+    if not data.empty:
+        data['SMA_20'] = data['Close'].rolling(window=20).mean()
+        data['SMA_50'] = data['Close'].rolling(window=50).mean()
+        data['Daily_Return'] = data['Close'].pct_change()
+        data['Volatility'] = data['Daily_Return'].rolling(window=20).std()
+
+print("\nKey indicators calculated for all stocks.")
+
+
+# ----------------------------------------------------------------------------
+# Step 4: Generate Visualizations
+# ----------------------------------------------------------------------------
+def create_dashboard(ticker, data):
+    """Generates and displays a set of plots for a given stock."""
+    if data.empty:
+        print(f"Cannot generate dashboard for {ticker} due to missing data.")
+        return
+
+    print(f"\n--- Generating Dashboard for {ticker} ---")
+
+    fig = plt.figure(figsize=(20, 14))
+    fig.suptitle(f'Financial Dashboard for {ticker}', fontsize=24, weight='bold')
+    gs = GridSpec(2, 2, figure=fig)
+
+    ax1 = fig.add_subplot(gs[0, :])
+    ax2 = fig.add_subplot(gs[1, 0])
+    ax3 = fig.add_subplot(gs[1, 1])
+
+    # --- Plot 1: Stock Price and Moving Averages ---
+    ax1.plot(data.index, data['Close'], label='Close Price', color='blue', alpha=0.8)
+    ax1.plot(data.index, data['SMA_20'], label='20-Day SMA', color='orange', linestyle='--')
+    ax1.plot(data.index, data['SMA_50'], label='50-Day SMA', color='red', linestyle='--')
+    ax1.set_title(f'{ticker} Stock Price and Moving Averages', fontsize=16)
+    ax1.set_ylabel('Price (USD)', fontsize=12)
+    ax1.legend(fontsize=12)
+    ax1.grid(True)
+
+    # --- Plot 2: Histogram of Daily Returns ---
+    ax2.hist(data['Daily_Return'].dropna(), bins=50, color='green', alpha=0.7)
+    ax2.set_title('Distribution of Daily Returns', fontsize=16)
+    ax2.set_xlabel('Daily Return', fontsize=12)
+    ax2.set_ylabel('Frequency', fontsize=12)
+    ax2.grid(True)
+
+    # --- Plot 3: Volatility Chart ---
+    ax3.plot(data.index, data['Volatility'], label='20-Day Rolling Volatility', color='purple')
+    ax3.set_title('20-Day Rolling Volatility', fontsize=16)
+    ax3.set_xlabel('Date', fontsize=12)
+    ax3.set_ylabel('Standard Deviation', fontsize=12)
+    ax3.grid(True)
+
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.show()
+
+# Generate dashboards for all stocks
+for ticker in tickers:
+    if ticker in stock_data:
+        create_dashboard(ticker, stock_data[ticker])
+
+print("\n--- Script Finished ---")
