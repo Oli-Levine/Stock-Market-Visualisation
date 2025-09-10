@@ -14,4 +14,16 @@ This project was built to demonstrate foundational skills in data acquisition, t
 2. Distribution of Daily Returns: A histogram showing the frequency and distribution of daily returns, useful for understanding volatility.
 3. Rolling Volatility: A time-series plot of the stock's 20-day volatility to analyze changes in risk over time.
 
+# Sample dashboard output
+Here is an example of the dashboard generated for the Apple Inc. (AAPL) ticker.
 ![AAPL Stock Analysis Dashboard](AAPL_dashboard.jpg)
+
+# Technologies used.
+• Python 3
+• Pandas: For data manipulation, time-series analysis, and indicator calculations.
+• yfinance: As the API client to fetch historical market data from Yahoo Finance.
+• Matplotlib: For creating the static data visualizations and dashboards.
+• NumPy: For numerical operations (used as a dependency by pandas).
+
+# How to Run This Project
+This script is designed to be self-contained and easy to run in any environment that supports Python, including local machines and Google Colab.
