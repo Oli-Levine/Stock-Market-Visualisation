@@ -14,3 +14,4 @@ This project was built to demonstrate foundational skills in data acquisition, t
 2. Distribution of Daily Returns: A histogram showing the frequency and distribution of daily returns, useful for understanding volatility.
 3. Rolling Volatility: A time-series plot of the stock's 20-day volatility to analyze changes in risk over time.
 
+![AAPL Stock Analysis Dashboard](AAPL_dashboard.jpg)
