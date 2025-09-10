@@ -30,6 +30,6 @@ This script is designed to be self-contained and easy to run in any environment 
 Instructions:
 1. Click on the badge below
 2. In the Colab notebook, click Runtime from the top menu.
-3. Select Run all. The script will automatically install any missing libraries and then run from top to bottom, displaying the output plots directly in the notebook.
-[![Open project in Colab](https://colab.research.google.com/assets/colab-badge.svg
-)]((https://colab.research.google.com/drive/1mhFNW-oCJ1HbCQIIiJbSBPs1BacX8W3M?usp=sharing)
+3. Select Run all. The script will automatically install any missing libraries( and then run from top to bottom, displaying the output plots directly in the notebook.
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1mhFNW-oCJI1HbCDZl1jDbSBPs1BAcX8W3M?usp=sharing)
+
